@@ -2,12 +2,34 @@
 ## Introductory Project: Diagonal Sudoku Solver
 
 # Question 1 (Naked Twins)
-Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+
+Q: How do we use constraint propagation to solve the naked twins problem?
+
+A: The naked twins problem is similar to the only choice problem.
+However, instead of looking for a single choice, we are looking for a pair of twins within a unit.
+The algorithm can briefly be described as:
+
+1. For each unit:
+    1. Find pairs of naked twins (boxes with the same two possible values).
+    1. For all peers in the unit, eliminate the two twin values.
 
 # Question 2 (Diagonal Sudoku)
-Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+
+Q: How do we use constraint propagation to solve the diagonal sudoku problem?
+
+A: In addition to having units for rows, columns, and squares, have units for diagonals.
+In this case, the diagonals would be:
+```
+[A1, B2, C3, D4, E5, F6, G7, H8, I9]
+[A9, B8, C7, D6, E5, F4, G3, H2, I1]
+```
+By adding these units, our constraint propagation code should automatically apply:
+
+- Elimination: Elimination looks at peers when eliminating. Because peers are calculated from the units, diagonals are taken care of.
+- Only Choice: Only choice looks at choices within a unit, so diagonals are taken care of.
+- Naked Twins: Also only looks at twins within a unit, so diagonals are taken care of.
+- Search: Search is orthoganol to the constraint propagation.
+As long as all constraints are maintained, search only needs to check if the board is solved or not; otherwise, it will descend down the solution tree.
 
 ### Install
 
