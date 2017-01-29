@@ -75,3 +75,13 @@ DIAGONAL_UNITS = [
     concat(ROWS, reversed(COLS)),  # top right to bottom left
 ]
 UNITLIST = ROW_UNITS + COLUMN_UNITS + SQUARE_UNITS + DIAGONAL_UNITS
+
+# Indexes
+UNITS = {
+    box: [unit for unit in UNITLIST if box in unit]
+    for box in BOXES
+}
+PEERS = {
+    box: set(sum(UNITS[box], [])) - {box}
+    for box in BOXES
+}
