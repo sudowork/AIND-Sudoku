@@ -187,7 +187,57 @@ def apply_constraints(constraints, values):
 
 
 def search(values):
-    pass
+    """
+    Using depth-first search and propagation, create a search tree and solve.
+    NOTE: This assumes that we only want A single solution, not ALL solutions.
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        A solution if one exists; otherwise, False
+    """
+    # First, reduce the puzzle using the previous function
+    reduced_values = reduce_puzzle(values)
+
+    # Base case when puzzle is unsolvable
+    if reduced_values is False:
+        return False
+
+    # Choose one of the unfilled squares with the fewest possibilities
+    min_choice = get_box_with_fewest_possibilities(reduced_values)
+
+    # Base case when puzzle is already solved
+    if min_choice is None:
+        return reduced_values
+
+    min_box, possible_values = min_choice
+
+    # Now use recursion to solve each one of the resulting sudokus, and if one returns a value (not False), return that answer!
+    for possible_value in list(possible_values):
+        subtree_values = reduced_values.copy()
+        subtree_values[min_box] = possible_value
+        subtree_solution = search(subtree_values)
+        if subtree_solution is not False:
+            return subtree_solution
+
+    # Unsolvable puzzle
+    return False
+
+
+def get_box_with_fewest_possibilities(values):
+    """Returns a (box, value) tuple of a box with the least possible solutions.
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        (box, value) tuple for one of the boxes of minmum possible solutions.
+    """
+    unsolved_values = [
+        (box, value)
+        for box, value in values.items() if len(value) > 1
+    ]
+    if len(unsolved_values) == 0:
+        return None
+    sorted_values = sorted(unsolved_values, key=lambda x: len(x[1]))
+    return sorted_values[0]
 
 
 def solve(grid):
