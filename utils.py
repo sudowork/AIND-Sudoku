@@ -7,6 +7,14 @@ def cross(A, B):
     ]
 
 
+def concat(A, B):
+    "One-to-one concatenation of elements in A and elements in B."
+    return [
+      s + t
+      for s, t in zip(A, B)
+    ]
+
+
 def grid_values(grid):
     """
     Convert grid into a dict of {square: char} with '123456789' for empties.
@@ -60,4 +68,8 @@ SQUARE_UNITS = [
   for rs in ('ABC', 'DEF', 'GHI')
   for cs in ('123', '456', '789')
 ]
-UNITLIST = ROW_UNITS + COLUMN_UNITS + SQUARE_UNITS
+DIAGONAL_UNITS = [
+    concat(ROWS, COLS),            # top left to bottom right
+    concat(ROWS, reversed(COLS)),  # top right to bottom left
+]
+UNITLIST = ROW_UNITS + COLUMN_UNITS + SQUARE_UNITS + DIAGONAL_UNITS
