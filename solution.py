@@ -3,6 +3,11 @@ from utils import *
 assignments = []
 
 
+def assign_values(values, boxes_and_values):
+    for box, value in boxes_and_values:
+        assign_value(values, box, value)
+
+
 def assign_value(values, box, value):
     """
     Please use this function to update your values dictionary!
