@@ -282,6 +282,9 @@ def is_solved(value):
 
 
 def assign_values(values, boxes_and_values):
+    """
+    Assigns multiple values.
+    """
     for box, value in boxes_and_values:
         assign_value(values, box, value)
     return
