@@ -30,9 +30,36 @@ def naked_twins(values):
     Returns:
         the values dictionary with the naked twins eliminated from peers.
     """
+    new_values = values.copy()
+    for unit in UNITLIST:
+        unit_twins = get_naked_twins(new_values, unit)
+        for value, twins in unit_twins.items():
+            peers = set(unit) - twins
+            eliminate_values_from_peers(new_values, peers, value)
+    return new_values
 
-    # Find all instances of naked twins
-    # Eliminate the naked twins as possibilities for their peers
+
+def get_naked_twins(values, unit):
+    """Gets all the naked twins in a unit.
+    Args:
+        values: Sudoku in dictionary form.
+
+    Returns:
+        A dictionary of twin values to the corresponding boxes.
+    """
+    possible_twins = dict()  # value -> set(box, ...)
+    for box in unit:
+        value = values[box]
+        if len(value) != 2:
+            continue
+        if value not in possible_twins:
+            possible_twins[value] = set()
+        possible_twins[value].add(box)
+    # filter possible_twins to only those where we have exactly two boxes
+    return {
+        value: boxes
+        for value, boxes in possible_twins.items() if len(boxes) == 2
+    }
 
 
 def eliminate(values):
@@ -77,6 +104,21 @@ def is_solved(value):
         True if is solved, False otherwise.
     """
     return len(value) == 1
+
+
+def eliminate_values_from_peers(values, peers, nums_to_eliminate):
+    """Eliminates multiple values from all passed in peers.
+    This method mutates values, so it is expected that the caller passes in a
+    copy of the original values dictionary.
+    Args:
+        values: Sudoku in dictionary form.
+        peers: Iterable of boxes, preferably a set for performance.
+        nums_to_eliminate: String containing values of numbers to eliminate
+    Returns:
+        Nothing. This method mutates the original values dictionary.
+    """
+    for num in nums_to_eliminate:
+        eliminate_from_peers(values, peers, num)
 
 
 def eliminate_from_peers(values, peers, num_to_eliminate):
@@ -151,7 +193,7 @@ def reduce_puzzle(values):
     Returns:
         Fully reduced Sudoku puzzle (it may not be a valid solution yet).
     """
-    constraints = [eliminate, only_choice]
+    constraints = [eliminate, only_choice, naked_twins]
     stalled = False
     while not stalled:
         # Check how many boxes have a determined value
