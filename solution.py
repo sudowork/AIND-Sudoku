@@ -1,7 +1,4 @@
-import re
-
 from utils import *
-from constants import *
 
 assignments = []
 

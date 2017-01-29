@@ -1,3 +1,5 @@
+import re
+
 def cross(A, B):
     "Cross product of elements in A and elements in B."
     return [
