@@ -45,3 +45,19 @@ ROWS = 'ABCDEFGHI'
 COLS = '123456789'
 ALL_NUMS = COLS
 BOXES = cross(ROWS, COLS)
+
+# Units
+ROW_UNITS = [
+  cross(row, COLS)
+  for row in ROWS
+]
+COLUMN_UNITS = [
+  cross(ROWS, col)
+  for col in COLS
+]
+SQUARE_UNITS = [
+  cross(rs, cs)
+  for rs in ('ABC', 'DEF', 'GHI')
+  for cs in ('123', '456', '789')
+]
+UNITLIST = ROW_UNITS + COLUMN_UNITS + SQUARE_UNITS
