@@ -1,8 +1,7 @@
 import re
 
-ROWS = 'ABCDEFGHI'
-COLS = '123456789'
-ALL_NUMS = COLS
+from utils import *
+from constants import *
 
 assignments = []
 
@@ -31,15 +30,6 @@ def naked_twins(values):
     # Eliminate the naked twins as possibilities for their peers
 
 
-def cross(A, B):
-    "Cross product of elements in A and elements in B."
-    return [
-        s + t
-        for s in A
-        for t in B
-    ]
-
-
 def grid_values(grid):
     """
     Convert grid into a dict of {square: char} with '123456789' for empties.
@@ -51,10 +41,9 @@ def grid_values(grid):
             Values: The value in each box, e.g., '8'. If the box has no value, then the value will be '123456789'.
     """
     assert re.compile(r'^[1-9.]{81}$').match(grid)
-    boxes = cross(ROWS, COLS)
     return {
         box: ALL_NUMS if value == '.' else value
-        for box, value in zip(boxes, grid)
+        for box, value in zip(BOXES, grid)
     }
 
 
