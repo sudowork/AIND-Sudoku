@@ -1,4 +1,5 @@
 from collections import Counter
+from functools import reduce
 
 from utils import *
 
@@ -144,7 +145,45 @@ def get_only_choices_for_unit(values, unit):
 
 
 def reduce_puzzle(values):
-    pass
+    """Iteratively reduces the puzzle using the local constraints defined.
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        Fully reduced Sudoku puzzle (it may not be a valid solution yet).
+    """
+    constraints = [eliminate, only_choice]
+    stalled = False
+    while not stalled:
+        # Check how many boxes have a determined value
+        solved_values_before = get_solved_boxes(values)
+
+        # Reduce puzzle by all constraints
+        values = apply_constraints(constraints, values)
+
+        # Check how many boxes have a determined value, to compare
+        solved_values_after = get_solved_boxes(values)
+        # If no new values were added, stop the loop.
+        stalled = solved_values_before == solved_values_after
+        # Sanity check, return False if there is a box with zero available values:
+        if any([len(value) == 0 for value in values.values()]):
+            return False
+    return values
+
+
+def apply_constraints(constraints, values):
+    """Applies the constraints in order to the initial Sudoku puzzle, returning
+    the reduced puzzle.
+    Args:
+        constraints: A list of constraint functions with signature values -> values.
+        values: Initial Sudoku in dictionary form.
+    Returns:
+        Reduced puzzle from applying each constraints once.
+    """
+    return reduce(
+        lambda new_values, constraint: constraint(new_values),
+        constraints,
+        values
+    )
 
 
 def search(values):
