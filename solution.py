@@ -1,3 +1,5 @@
+from collections import Counter
+
 from utils import *
 
 assignments = []
@@ -96,7 +98,49 @@ def eliminate_from_peers(values, peers, num_to_eliminate):
 
 
 def only_choice(values):
-    pass
+    """Finalize all values that are the only choice for a unit.
+
+    Go through all the units, and whenever there is a unit with a value
+    that only fits in one box, assign the value to this box.
+
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        Resulting Sudoku in dictionary form after filling in only choices.
+    """
+    new_values = values.copy()  # note: do not modify original values
+    for unit in UNITLIST:
+        # Use new_values iteratively, so may non-deterministic, but should
+        # result in faster convergence.
+        only_choices = get_only_choices_for_unit(new_values, unit)
+        assign_values(new_values, only_choices)
+    return new_values
+
+
+def get_only_choices_for_unit(values, unit):
+    """Returns a list of (box, value) tuples that are valid only choices for a unit.
+
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        List of (box, value) tuples that are only choices.
+    """
+    possibility_counts = Counter()
+    # Maintain an index of value -> box
+    # Since we only care about only choices, allow the box to be overwritten
+    # Only choices will inherently not be overwritten.
+    value_to_box = dict()
+    # Count appearances of values and create index of value -> last box
+    for box in unit:
+        box_values = list(values[box])
+        possibility_counts.update(box_values)
+        for value in box_values:
+            existing_values = value_to_box[value] = box
+    return [
+        (value_to_box[value], value)
+        for value, count in possibility_counts.items()
+        if count == 1
+    ]
 
 
 def reduce_puzzle(values):
