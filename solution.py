@@ -1,3 +1,9 @@
+import re
+
+ROWS = 'ABCDEFGHI'
+COLS = '123456789'
+ALL_NUMS = COLS
+
 assignments = []
 
 
@@ -44,7 +50,12 @@ def grid_values(grid):
             Keys: The boxes, e.g., 'A1'
             Values: The value in each box, e.g., '8'. If the box has no value, then the value will be '123456789'.
     """
-    pass
+    assert re.compile(r'^[1-9.]{81}$').match(grid)
+    boxes = cross(ROWS, COLS)
+    return {
+        box: ALL_NUMS if value == '.' else value
+        for box, value in zip(boxes, grid)
+    }
 
 
 def display(values):
