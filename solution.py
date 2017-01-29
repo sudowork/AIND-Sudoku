@@ -28,7 +28,66 @@ def naked_twins(values):
 
 
 def eliminate(values):
-    pass
+    """Eliminate values from peers of each box with a single value.
+
+    Go through all the boxes, and whenever there is a box with a single value,
+    eliminate this value from the set of values of all its peers.
+
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        Resulting Sudoku in dictionary form after eliminating values.
+    """
+    result = values.copy()  # don't mutate the original values dict
+    solved_boxes = get_solved_boxes(values)
+    for box in solved_boxes:
+        peers = PEERS[box]
+        value = values[box]
+        eliminate_from_peers(result, peers, value)
+    return result
+
+
+def get_solved_boxes(values):
+    """Returns all solved boxes.
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        List of all boxes that are solved.
+    """
+    return [
+        box
+        for box, value in values.items()
+        if is_solved(value)
+    ]
+
+
+def is_solved(value):
+    """Returns if a value is solved (single value).
+    Args:
+        value: Value string.
+    Returns:
+        True if is solved, False otherwise.
+    """
+    return len(value) == 1
+
+
+def eliminate_from_peers(values, peers, num_to_eliminate):
+    """Eliminates a value from all passed in peers.
+    This method mutates values, so it is expected that the caller passes in a
+    copy of the original values dictionary.
+    Args:
+        values: Sudoku in dictionary form.
+        peers: Iterable of boxes, preferably a set for performance.
+        num_to_eliminate: String value of number to eliminate.
+    Returns:
+        Nothing. This method mutates the original values dictionary.
+    """
+    for box in peers:
+        old_value = values[box]
+        if not is_solved(old_value):  # Safer and avoid unnecessary replace
+            new_value = old_value.replace(num_to_eliminate, '')
+            assign_value(values, box, new_value)
+    return
 
 
 def only_choice(values):
