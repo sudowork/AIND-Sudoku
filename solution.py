@@ -262,13 +262,13 @@ def get_solved_boxes(values):
     Args:
         values: Sudoku in dictionary form.
     Returns:
-        List of all boxes that are solved.
+        Set of all boxes that are solved.
     """
-    return [
+    return set(
         box
         for box, value in values.items()
         if is_solved(value)
-    ]
+    )
 
 
 def is_solved(value):
