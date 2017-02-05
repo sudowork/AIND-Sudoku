@@ -1,5 +1,8 @@
 import re
 
+assignments = []
+
+
 def cross(A, B):
     "Cross product of elements in A and elements in B."
     return [
@@ -50,6 +53,51 @@ def display(values):
                       for c in COLS))
         if r in 'CF':
             print(full_line)
+
+
+def get_solved_boxes(values):
+    """Returns all solved boxes.
+    Args:
+        values: Sudoku in dictionary form.
+    Returns:
+        Set of all boxes that are solved.
+    """
+    return set(
+        box
+        for box, value in values.items()
+        if is_solved(value)
+    )
+
+
+def is_solved(value):
+    """Returns if a value is solved (single value).
+    Args:
+        value: Value string.
+    Returns:
+        True if is solved, False otherwise.
+    """
+    return len(value) == 1
+
+
+def assign_values(values, boxes_and_values):
+    """
+    Assigns multiple values.
+    """
+    for box, value in boxes_and_values:
+        assign_value(values, box, value)
+    return
+
+
+def assign_value(values, box, value):
+    """
+    Please use this function to update your values dictionary!
+    Assigns a value to a given box. If it updates the board record it.
+    """
+    values[box] = value
+    if len(value) == 1:
+        assignments.append(values.copy())
+    return values
+
 
 ROWS = 'ABCDEFGHI'
 COLS = '123456789'
